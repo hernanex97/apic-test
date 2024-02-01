@@ -29,7 +29,7 @@ def product = "poke-product_1.0.0.yaml" //Eg: "sample-product_1.0.0.yaml"
 //Name of the API Product in yaml file
 def productName = "poke-product" //Eg: "sample-product"
 
-node('jenkins-agent-apic2018-linux') { //This is the label which is defined in Jenkins Master and runs in worker node
+node('principal') { //This is the label which is defined in Jenkins Master and runs in worker node
 
     try{
         echo "Workspace: ${env.WORKSPACE}"        
