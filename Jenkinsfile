@@ -244,59 +244,57 @@ def Replace(String productName, String newVersion, String productPlanMapFile, St
 *Deploy to production
 */
 def ValidateCCAndDeploy(String server, String creds, String product, String catalog, String org, String realm,
-        String leadDeveloperID, String appdevManagerID, String appdevManagerEmail, String space = "", 
-        String environment, String productName) {
-    
-            //Add your code to integrate with Change Control API, if it is applicable         
+    String leadDeveloperID, String appdevManagerID, String appdevManagerEmail, String space = "", 
+    String environment, String productName) {
 
-            //Promote the code to next envionment
-            //Check if the API has to be versioned
-            print "For the 1st deployment, Versioning is not required. Select it as No."
-            print "For the subsequent deployment, Versioning is required. Select it as Yes."
-            print "Is the API already published in ${environment} ?"
-            def apiVersioningChoices = ['Yes', 'No'].join('\n')
-            def apiVersioning = null
-            apiVersioning = input(message: "Is API Versioning required ?",
-                    parameters: [choice(choices: apiVersioningChoices, name: 'apiVersioning')])
+        //Add your code to integrate with Change Control API, if it is applicable         
 
-            if (apiVersioning == 'No') {
-                //Publish the product 
-                Deploy(server, creds, product, catalog, org, realm, space)
-            }
-            else {  
-                print "Please enter staging product file name. Eg:sample_product_1.1.0.yaml"                
-                //Get the satging product file name
-                def stagingProduct = input(
-                        id: 'stagingProduct', message: 'Please enter staging product file name. Eg:sample_product_1.1.0.yaml', parameters: [
-                        [$class: 'TextParameterDefinition', defaultValue: 'sample_product_1.1.0.yaml', description: 'Staging Product Version', name: 'stagingProduct']
-                ])
+        //Promote the code to next envionment
+        //Check if the API has to be versioned
+        print "For the 1st deployment, Versioning is not required. Select it as No."
+        print "For the subsequent deployment, Versioning is required. Select it as Yes."
+        print "Is the API already published in ${environment} ?"
+        def apiVersioningChoices = ['Yes', 'No'].join('\n')
+        def apiVersioning = null
+        apiVersioning = input(message: "Is API Versioning required ?",
+                parameters: [choice(choices: apiVersioningChoices, name: 'apiVersioning')])
 
-                print "Please staging product name. Eg:sample"                
-                //Get the staging product name
-                def stagingProductName = input(
-                        id: 'stagingProductName', message: 'Please enter staging product name. Eg:sample', parameters: [
-                        [$class: 'TextParameterDefinition', defaultValue: 'sample', description: 'Staging Product Name', name: 'stagingProductName']
-                ])                
-
-                print "Please enter new version number of the product."                
-                //Get the new version number
-                def newVersion = input(
-                        id: 'newVersion', message: 'Please enter new version number of the product.', parameters: [
-                        [$class: 'TextParameterDefinition', defaultValue: '0.0.0', description: 'New Version Number', name: 'newNersionNumber']
-                ]) 
-
-                print "Please enter the product plan mapping file name. Eg:product-map-file.txt"
-                //Get the plan mapping
-                def productPlanMapFile = input(
-                        id: 'productPlanMapFile', message: 'Please enter the product plan mapping file name. Eg:product-map-file.txt', parameters: [
-                        [$class: 'TextParameterDefinition', defaultValue: 'product-map-file.txt', description: 'Plan Mapping', name: 'planMapping']
-                ])
-
-                //Replace the existing product with the new version & corresponding plan                               
-                Deploy(server, creds, product, catalog, org, realm, space, "true", stagingProduct, stagingProductName, newVersion, productPlanMapFile)                
-            }
-                                     
-            changeOption = false                     
+        if (apiVersioning == 'No') {
+            //Publish the product 
+            Deploy(server, creds, product, catalog, org, realm, space)
         }
-    }    
-}
+        else {  
+            print "Please enter staging product file name. Eg:sample_product_1.1.0.yaml"                
+            //Get the satging product file name
+            def stagingProduct = input(
+                    id: 'stagingProduct', message: 'Please enter staging product file name. Eg:sample_product_1.1.0.yaml', parameters: [
+                    [$class: 'TextParameterDefinition', defaultValue: 'sample_product_1.1.0.yaml', description: 'Staging Product Version', name: 'stagingProduct']
+            ])
+
+            print "Please staging product name. Eg:sample"                
+            //Get the staging product name
+            def stagingProductName = input(
+                    id: 'stagingProductName', message: 'Please enter staging product name. Eg:sample', parameters: [
+                    [$class: 'TextParameterDefinition', defaultValue: 'sample', description: 'Staging Product Name', name: 'stagingProductName']
+            ])                
+
+            print "Please enter new version number of the product."                
+            //Get the new version number
+            def newVersion = input(
+                    id: 'newVersion', message: 'Please enter new version number of the product.', parameters: [
+                    [$class: 'TextParameterDefinition', defaultValue: '0.0.0', description: 'New Version Number', name: 'newNersionNumber']
+            ]) 
+
+            print "Please enter the product plan mapping file name. Eg:product-map-file.txt"
+            //Get the plan mapping
+            def productPlanMapFile = input(
+                    id: 'productPlanMapFile', message: 'Please enter the product plan mapping file name. Eg:product-map-file.txt', parameters: [
+                    [$class: 'TextParameterDefinition', defaultValue: 'product-map-file.txt', description: 'Plan Mapping', name: 'planMapping']
+            ])
+
+            //Replace the existing product with the new version & corresponding plan                               
+            Deploy(server, creds, product, catalog, org, realm, space, "true", stagingProduct, stagingProductName, newVersion, productPlanMapFile)                
+        }
+                                    
+        changeOption = false                     
+    } 
