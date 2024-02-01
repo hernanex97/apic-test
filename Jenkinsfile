@@ -19,7 +19,7 @@ import org.jenkinsci.plugins.scriptsecurity.sandbox.RejectedAccessException
 
 // Git url of the repo/folder where this Jenkinsfile is placed
 jenkinsfileURL = "https://github.com/hernanex97/apic-test/blob/main/Jenkinsfile"
-jenkinsfileBranch = "master"
+jenkinsfileBranch = "main"
 
 //Credential objects defined in Jenkins
 gitCredentials = "gitCredentials"
