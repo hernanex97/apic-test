@@ -202,14 +202,14 @@ def Logout(String server){
 def Publish(String product, String catalog, String org, String server, String space = ""){
     echo "Publishing product ${product}"
     if (!space.trim()) {
-        def status = sh script: "/tmp/apic products:publish ${product} --catalog ${catalog} --org ${org} --server ${server}", 
+        def status = sh script: "/tmp/apic products:publish --catalog ${catalog} --org ${org} --server ${server} ${product} ", 
             returnStatus: true  
         if (status == 0) {                            
             return status             
         }
     }
     else {
-        def status = sh script: "/tmp/apic products:publish --scope space ${product} --space ${space} --catalog ${catalog} --org ${org} --server ${server}", 
+        def status = sh script: "/tmp/apic products:publish --scope space --space ${space} --catalog ${catalog} --org ${org} --server ${server} ${product}", 
             returnStatus: true  
         if (status == 0) {            
             return status             
@@ -221,12 +221,12 @@ def Publish(String product, String catalog, String org, String server, String sp
 def Stage(String product, String catalog, String org, String server, String space = "") {
     echo "Staging product ${product}"
     if (!space.trim()) {
-        def status = sh script: "/tmp/apic products:publish --stage ${product} --catalog ${catalog} --org ${org} --server ${server}", 
+        def status = sh script: "/tmp/apic products:publish --stage --catalog ${catalog} --org ${org} --server ${server} ${product} ", 
             returnStatus: true  
         return status  
     }
     else {
-        def status = sh script: "/tmp/apic products:publish --stage --scope space ${product} --space ${space} --catalog ${catalog} --org ${org} --server ${server}", 
+        def status = sh script: "/tmp/apic products:publish --stage --scope space --space ${space} --catalog ${catalog} --org ${org} --server ${server} ${product} ", 
             returnStatus: true  
         return status          
     }     
