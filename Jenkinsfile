@@ -38,7 +38,7 @@ node('principal') { //This is the label which is defined in Jenkins Master and r
         //Checkout the code 
         GitCheckout(env.WORKSPACE, jenkinsfileURL, jenkinsfileBranch, gitCredentials)
 
-        //Load the apic & jenkins variables from the property files
+        //Load the APIC & jenkins variables from the property files
         def apic = readProperties file: 'environment.properties'
         def jenkins = readProperties file: 'jenkins.properties'
  
@@ -188,28 +188,28 @@ def Login(String server, String creds, String realm){
         
         //Ensure the windows batch script is called from withCredentials step else the 
         //credentials will not be masked in the log output        
-        sh "apic login --server ${server} --username ${usernameVariableLocal} --password ${passwordVariableLocal} --realm ${realm}"        
+        sh "./tmp/apic login --server ${server} --username ${usernameVariableLocal} --password ${passwordVariableLocal} --realm ${realm}"        
     } 
     //echo "Successfully Logged In:  ${usernameVariableLocal}@${server}"
 }
 
 //Logout from APIM server
 def Logout(String server){
-    sh "apic logout -s ${server}"
+    sh "./tmp/apic logout -s ${server}"
 }
 
 //Publish artifacts to APIM server
 def Publish(String product, String catalog, String org, String server, String space = ""){
     echo "Publishing product ${product}"
     if (!space.trim()) {
-        def status = sh script: "apic products:publish ${product} --catalog ${catalog} --org ${org} --server ${server}", 
+        def status = sh script: "./tmp/apic products:publish ${product} --catalog ${catalog} --org ${org} --server ${server}", 
             returnStatus: true  
         if (status == 0) {                            
             return status             
         }
     }
     else {
-        def status = sh script: "apic products:publish --scope space ${product} --space ${space} --catalog ${catalog} --org ${org} --server ${server}", 
+        def status = sh script: "./tmp/apic products:publish --scope space ${product} --space ${space} --catalog ${catalog} --org ${org} --server ${server}", 
             returnStatus: true  
         if (status == 0) {            
             return status             
@@ -221,12 +221,12 @@ def Publish(String product, String catalog, String org, String server, String sp
 def Stage(String product, String catalog, String org, String server, String space = "") {
     echo "Staging product ${product}"
     if (!space.trim()) {
-        def status = sh script: "apic products:publish --stage ${product} --catalog ${catalog} --org ${org} --server ${server}", 
+        def status = sh script: "./tmp/apic products:publish --stage ${product} --catalog ${catalog} --org ${org} --server ${server}", 
             returnStatus: true  
         return status  
     }
     else {
-        def status = sh script: "apic products:publish --stage --scope space ${product} --space ${space} --catalog ${catalog} --org ${org} --server ${server}", 
+        def status = sh script: "./tmp/apic products:publish --stage --scope space ${product} --space ${space} --catalog ${catalog} --org ${org} --server ${server}", 
             returnStatus: true  
         return status          
     }     
@@ -235,7 +235,7 @@ def Stage(String product, String catalog, String org, String server, String spac
 //Replace the existing product with a new version of the product
 def Replace(String productName, String newVersion, String productPlanMapFile, String catalog, String org, String server, String space = ""){
     echo "Replacing the existing product ${productName} with the new version of the product ${newVersion}"
-    def status = sh script: "apic products:replace --scope space ${productName}:${newVersion} ${productPlanMapFile} --space ${space} --catalog ${catalog} --org ${org} --server ${server}",
+    def status = sh script: "./tmp/apic products:replace --scope space ${productName}:${newVersion} ${productPlanMapFile} --space ${space} --catalog ${catalog} --org ${org} --server ${server}",
         returnStatus:true   
     return status
 }
