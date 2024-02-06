@@ -1,12 +1,13 @@
 swagger: '2.0'
 info:
-  version: 1.0.0
+  version: 1.8.0
   title: pokemon-api-documented
   x-ibm-name: pokemon-api-documented
   description: >
     # **API Pokemon - DEMO APIC**
 
     Herno y Gonza estuvieron aquí.
+    Tambien Andrés
 
     Esta API funciona como un Proxy a una API externa de Pokémon:
     https://pokeapi.co/

@@ -35,6 +35,15 @@ plans:
         value: 1000/2hour
     apis:
       pokemon-api-documented1.0.0: {}
+  andres-plan:
+    title: andresplan
+    description: andresplan
+    approval: false
+    rate-limits:
+      default:
+        value: 4000/1hour
+    apis:
+      pokemon-api-documented1.0.0: {}
 product: 1.0.0
 visibility:
   view:
