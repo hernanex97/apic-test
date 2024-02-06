@@ -188,28 +188,28 @@ def Login(String server, String creds, String realm){
         
         //Ensure the windows batch script is called from withCredentials step else the 
         //credentials will not be masked in the log output        
-        sh "/tmp/apic login --server ${server} --username ${usernameVariableLocal} --password ${passwordVariableLocal} --realm ${realm}"        
+        sh "/bin/apic login --server ${server} --username ${usernameVariableLocal} --password ${passwordVariableLocal} --realm ${realm}"        
     } 
     //echo "Successfully Logged In:  ${usernameVariableLocal}@${server}"
 }
 
 //Logout from APIM server
 def Logout(String server){
-    sh "/tmp/apic logout -s ${server}"
+    sh "/bin/apic logout -s ${server}"
 }
 
 //Publish artifacts to APIM server
 def Publish(String product, String catalog, String org, String server, String space = ""){
     echo "Publishing product ${product}"
     if (!space.trim()) {
-        def status = sh script: "/tmp/apic products:publish --catalog ${catalog} --org ${org} --server ${server} ${product} ", 
+        def status = sh script: "/bin/apic products:publish --catalog ${catalog} --org ${org} --server ${server} ${product} ", 
             returnStatus: true  
         if (status == 0) {                            
             return status             
         }
     }
     else {
-        def status = sh script: "/tmp/apic products:publish --scope space --space ${space} --catalog ${catalog} --org ${org} --server ${server} ${product}", 
+        p
             returnStatus: true  
         if (status == 0) {            
             return status             
@@ -221,12 +221,12 @@ def Publish(String product, String catalog, String org, String server, String sp
 def Stage(String product, String catalog, String org, String server, String space = "") {
     echo "Staging product ${product}"
     if (!space.trim()) {
-        def status = sh script: "/tmp/apic products:publish --stage --catalog ${catalog} --org ${org} --server ${server} ${product} ", 
+        def status = sh script: "/bin/apic products:publish --stage --catalog ${catalog} --org ${org} --server ${server} --migrate_subscriptions ${product} ", 
             returnStatus: true  
         return status  
     }
     else {
-        def status = sh script: "/tmp/apic products:publish --stage --scope space --space ${space} --catalog ${catalog} --org ${org} --server ${server} ${product} ", 
+        def status = sh script: "/bin/apic products:publish --stage --scope space --space ${space} --catalog ${catalog} --org ${org} --server ${server} --migrate_subscriptions ${product} ", 
             returnStatus: true  
         return status          
     }     
@@ -235,7 +235,7 @@ def Stage(String product, String catalog, String org, String server, String spac
 //Replace the existing product with a new version of the product
 def Replace(String productName, String newVersion, String productPlanMapFile, String catalog, String org, String server, String space = ""){
     echo "Replacing the existing product ${productName} with the new version of the product ${newVersion}"
-    def status = sh script: "/tmp/apic products:replace --scope space ${productName}:${newVersion} ${productPlanMapFile} --space ${space} --catalog ${catalog} --org ${org} --server ${server}",
+    def status = sh script: "/bin/apic products:replace --scope space ${productName}:${newVersion} ${productPlanMapFile} --space ${space} --catalog ${catalog} --org ${org} --server ${server}",
         returnStatus:true   
     return status
 }
