@@ -64,8 +64,8 @@ node('principal') { //This is the label which is defined in Jenkins Master and r
         if(environment == 'Production'){
             ValidateCCAndDeploy(apic["productionServer"], jenkins["apicCredentials"], product, 
                 apic["productionCatalog"], apic["productionOrg"], apic["productionRealm"], 
-                jenkins["leadDeveloperID"], jenkins["appdevManagerID"], jenkins["appdevManagerEmail"],
-                "Production", productName)       
+                jenkins["leadDeveloperID"], jenkins["appdevManagerID"], jenkins["appdevManagerEmail"], 
+                apic["productionSpace"], "Production", productName)       
         }       
         //Method Requiring Script Approval Here
     } catch(RejectedAccessException exe)
@@ -117,7 +117,7 @@ def GitCheckout(String workspace, String url, String branch, String credentialsI
 
 //Publish API artifacts to APIM server.  
 //This applies only for Dev & Test environment as there is no Change Control included.
-def Deploy(String server, String creds, String product, String catalog, String org, String realm, 
+def Deploy(String server, String creds, String product, String catalog, String org, String realm, String space = "", 
     String versioning = "false", String stagingProduct = "", String stagingProductname = "", String newVersion = "", 
     String productPlanMapFile = "") {
         //Login to APIM Server
@@ -135,7 +135,7 @@ def Deploy(String server, String creds, String product, String catalog, String o
 
         if (versioning == "false") {
             //Publish to APIM server
-            def status = Publish(product, catalog, org, server)
+            def status = Publish(product, catalog, org, server, space)
             //If the status code is non zero i.e. publish failed, abort the pipeline.
             if(status != 0) 
             {
@@ -145,7 +145,7 @@ def Deploy(String server, String creds, String product, String catalog, String o
         }
         else {
             //Stage the new product version            
-            def status = Stage(stagingProduct, catalog, org, server)
+            def status = Stage(stagingProduct, catalog, org, server, space)
             //If the status code is non zero i.e. staging failed, abort the pipeline.
             if(status != 0) 
             {
@@ -154,7 +154,7 @@ def Deploy(String server, String creds, String product, String catalog, String o
             } 
 
             //Replace the existing product version with the new version 
-            status = Replace(stagingProductname, newVersion, productPlanMapFile, catalog, org, server)
+            status = Replace(stagingProductname, newVersion, productPlanMapFile, catalog, org, server, space)
             if(status != 0) 
             {
                 currentBuild.result = "FAILED"
@@ -199,27 +199,43 @@ def Logout(String server){
 }
 
 //Publish artifacts to APIM server
-def Publish(String product, String catalog, String org, String server){
+def Publish(String product, String catalog, String org, String server, String space = ""){
     echo "Publishing product ${product}"
-    def status = sh script: "/bin/apic products:publish --catalog ${catalog} --org ${org} --server ${server} ${product} ", 
-        returnStatus: true  
-    if (status == 0) {                            
-        return status             
+    if (!space.trim()) {
+        def status = sh script: "/bin/apic products:publish --catalog ${catalog} --org ${org} --server ${server} ${product} ", 
+            returnStatus: true  
+        if (status == 0) {                            
+            return status             
+        }
     }
+    else {
+        p
+            returnStatus: true  
+        if (status == 0) {            
+            return status             
+        }                    
+    }    
 } 
 
 //Stage the artifacts to APIM server
-def Stage(String product, String catalog, String org, String server) {
+def Stage(String product, String catalog, String org, String server, String space = "") {
     echo "Staging product ${product}"
+    if (!space.trim()) {
         def status = sh script: "/bin/apic products:publish --stage --catalog ${catalog} --org ${org} --server ${server} --migrate_subscriptions ${product} ", 
             returnStatus: true  
         return status  
+    }
+    else {
+        def status = sh script: "/bin/apic products:publish --stage --scope space --space ${space} --catalog ${catalog} --org ${org} --server ${server} --migrate_subscriptions ${product} ", 
+            returnStatus: true  
+        return status          
+    }     
 }
 
 //Replace the existing product with a new version of the product
-def Replace(String productName, String newVersion, String productPlanMapFile, String catalog, String org, String server){
+def Replace(String productName, String newVersion, String productPlanMapFile, String catalog, String org, String server, String space = ""){
     echo "Replacing the existing product ${productName} with the new version of the product ${newVersion}"
-    def status = sh script: "/bin/apic products:replace --scope catalog ${productName}:${newVersion} ${productPlanMapFile} --catalog ${catalog} --org ${org} --server ${server}",
+    def status = sh script: "/bin/apic products:replace --scope space ${productName}:${newVersion} ${productPlanMapFile} --space ${space} --catalog ${catalog} --org ${org} --server ${server}",
         returnStatus:true   
     return status
 }
@@ -229,7 +245,7 @@ def Replace(String productName, String newVersion, String productPlanMapFile, St
 *Deploy to production
 */
 def ValidateCCAndDeploy(String server, String creds, String product, String catalog, String org, String realm,
-    String leadDeveloperID, String appdevManagerID, String appdevManagerEmail, 
+    String leadDeveloperID, String appdevManagerID, String appdevManagerEmail, String space = "", 
     String environment, String productName) {
 
         //Add your code to integrate with Change Control API, if it is applicable         
@@ -246,7 +262,7 @@ def ValidateCCAndDeploy(String server, String creds, String product, String cata
 
         if (apiVersioning == 'No') {
             //Publish the product 
-            Deploy(server, creds, product, catalog, org, realm)
+            Deploy(server, creds, product, catalog, org, realm, space)
         }
         else {  
             print "Please enter staging product file name. Eg:sample_product_1.1.0.yaml"                
@@ -278,7 +294,7 @@ def ValidateCCAndDeploy(String server, String creds, String product, String cata
             ])
 
             //Replace the existing product with the new version & corresponding plan                               
-            Deploy(server, creds, product, catalog, org, realm, "true", stagingProduct, stagingProductName, newVersion, productPlanMapFile)                
+            Deploy(server, creds, product, catalog, org, realm, space, "true", stagingProduct, stagingProductName, newVersion, productPlanMapFile)                
         }
                                     
         changeOption = false                     
