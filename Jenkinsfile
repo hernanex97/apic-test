@@ -207,7 +207,7 @@ def Logout(String server){
 //Publish artifacts to APIM server
 def Publish(String product, String catalog, String org, String server){
     echo "Publishing product ${product}"
-    def status = sh script: "/bin/apic products:publish --catalog ${catalog} --org ${org} --server ${server} ${product} ", 
+    def status = sh script: "/bin/apic products:publish --catalog ${catalog} --org ${org} --server ${server} --migrate_subscriptions ${product} ", 
         returnStatus: true  
     if (status == 0) {                            
         return status             
