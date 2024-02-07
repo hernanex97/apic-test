@@ -6,9 +6,6 @@ info:
   description: >
     # **API Pokemon - DEMO APIC**
 
-    Herno y Gonza estuvieron aquí.
-    Tambien Andrés
-
     Esta API funciona como un Proxy a una API externa de Pokémon:
     https://pokeapi.co/
 

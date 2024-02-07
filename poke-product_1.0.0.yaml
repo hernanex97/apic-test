@@ -17,33 +17,6 @@ plans:
         value: 100/1hour
     apis:
       pokemon-api-documented1.0.0: {}
-  poke-plan:
-    title: PokePlan
-    description: Poke Plan
-    approval: false
-    rate-limits:
-      default:
-        value: 1000/1hour
-    apis:
-      pokemon-api-documented1.0.0: {}
-  ashketchum-plan:
-    title: ashketchum
-    description: ashketchum
-    approval: false
-    rate-limits:
-      default:
-        value: 1000/2hour
-    apis:
-      pokemon-api-documented1.0.0: {}
-  andres-plan:
-    title: andresplan
-    description: andresplan
-    approval: false
-    rate-limits:
-      default:
-        value: 4000/1hour
-    apis:
-      pokemon-api-documented1.0.0: {}
 product: 1.0.0
 visibility:
   view:
