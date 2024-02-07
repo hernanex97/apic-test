@@ -26,6 +26,15 @@ plans:
         value: 3000/1hour
     apis:
       pokemon-api-documented1.0.0: {}
+  poke-plan-gold:
+    title: Poke Plan Gold
+    description: Poke Plan Gold
+    approval: false
+    rate-limits:
+      default:
+        value: 10000/1hour
+    apis:
+      pokemon-api-documented1.0.0: {}
 product: 1.0.0
 visibility:
   view:
