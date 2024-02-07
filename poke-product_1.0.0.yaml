@@ -1,7 +1,7 @@
 info:
   title: poke-product
   name: poke-product
-  version: 1.2.0
+  version: 1.0.0
 apis:
   pokemon-api-documented1.0.0:
     $ref: pokemon-api-documented_1.0.0.yaml
@@ -29,6 +29,15 @@ plans:
   poke-plan-gold:
     title: Poke Plan Gold
     description: Poke plan Gold
+    approval: false
+    rate-limits:
+      default:
+        value: 10000/1hour
+    apis:
+      pokemon-api-documented1.0.0: {}
+  poke-plan-diamond:
+    title: Poke Plan Diamond
+    description: Poke plan Diamond
     approval: false
     rate-limits:
       default:
