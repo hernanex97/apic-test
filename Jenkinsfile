@@ -61,7 +61,7 @@ node('principal') { //This is the label which is defined in Jenkins Master and r
         } 
       
         //Validate change control & deploy to production server
-        if(environment == 'Production'){
+        if(environment == 'Produccion'){
             Deploy(apic["productionServer"], jenkins["apicCredentials"], product, apic["productionCatalog"], 
                 apic["productionOrg"], apic["productionRealm"]) 
         }       
@@ -72,7 +72,7 @@ node('principal') { //This is the label which is defined in Jenkins Master and r
         //         jenkins["leadDeveloperID"], jenkins["appdevManagerID"], jenkins["appdevManagerEmail"],
         //         "Production", productName)       
         // }       
-        
+
         //Method Requiring Script Approval Here
     } catch(RejectedAccessException exe)
     {
