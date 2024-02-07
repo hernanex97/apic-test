@@ -23,7 +23,7 @@ plans:
     approval: false
     rate-limits:
       default:
-        value: 1000/1hour
+        value: 2000/1hour
     apis:
       pokemon-api-documented1.0.0: {}
 product: 1.0.0
