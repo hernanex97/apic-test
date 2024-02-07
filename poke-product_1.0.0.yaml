@@ -1,7 +1,7 @@
 info:
   title: poke-product
   name: poke-product
-  version: 2.0.0
+  version: 1.0.0
 apis:
   pokemon-api-documented1.0.0:
     $ref: pokemon-api-documented_1.0.0.yaml
@@ -15,6 +15,15 @@ plans:
     rate-limits:
       default:
         value: 100/1hour
+    apis:
+      pokemon-api-documented1.0.0: {}
+  poke-plan:
+    title: Poke Plan
+    description: Poke Plan
+    approval: false
+    rate-limits:
+      default:
+        value: 1000/1hour
     apis:
       pokemon-api-documented1.0.0: {}
 product: 1.0.0
