@@ -9,7 +9,7 @@ gateways:
   - datapower-api-gateway
 plans:
   default-plan:
-    title: Default Plan
+    title: Default Plan BLA BLA BLA
     description: Default Plan
     approval: false
     rate-limits:
